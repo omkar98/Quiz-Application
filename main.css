@@ -35,8 +35,8 @@ body{
   font-weight: bolder;
 }
 #submit{
-  display: flex;
   justify-content: center;
+  display: block;
 }
 #quiz_title{
   text-align: center;

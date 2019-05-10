@@ -79,6 +79,7 @@ function buildQuiz(){
 
 function showResults(){
 
+  document.getElementById('submit').style.display = 'none';
   // gather answer containers from our quiz
   const answerContainers = quizContainer.querySelectorAll('.answers');
   const labels = quizContainer.querySelectorAll('label');
@@ -92,6 +93,7 @@ function showResults(){
     const answerContainer = answerContainers[questionNumber];
     const selector = 'input[name=question'+questionNumber+']:checked';
     const userAnswer = (answerContainer.querySelector(selector) || {}).value;
+    console.log(userAnswer);
     //find the corresponding label
     const labelSelector = 'label[class=question'+questionNumber+userAnswer+']';
     const selectedLabel = quizContainer.querySelector(labelSelector);
@@ -102,7 +104,8 @@ function showResults(){
       selectedLabel.style.color = 'darkgreen';
       selectedLabel.style.fontWeight = '500';
     }
-    else{
+    /*selectedLabel is NULL, if the user doesn't select any answer. Hence we only move in the elseif block if the userAnswer is not NULL.*/
+    else if(userAnswer!==currentQuestion.correctAnswer && userAnswer!==undefined){
       selectedLabel.style.color = 'red';
       selectedLabel.style.fontWeight = '500';
       const correctAnsLabel = 'label[class=question'+questionNumber+currentQuestion.correctAnswer+']';
@@ -110,7 +113,6 @@ function showResults(){
       correctAnsLabelHTML.style.fontWeight = '500';
       correctAnsLabelHTML.style.color = 'green';
     }
-    //Show all the correct answers to user
   });
 
   if((numCorrect/myQuestions.length)>=0.0 && (numCorrect/myQuestions.length)<=0.5)
