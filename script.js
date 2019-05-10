@@ -54,7 +54,7 @@ function buildQuiz(){
 
         // ...add an HTML radio button
         answers.push(
-          `<label>
+          `<label class="question${questionNumber}${letter}">
             <input type="radio" name="question${questionNumber}" value="${letter}">
             ${letter} :
             ${currentQuestion.answers[letter]}
@@ -81,34 +81,36 @@ function showResults(){
 
   // gather answer containers from our quiz
   const answerContainers = quizContainer.querySelectorAll('.answers');
+  const labels = quizContainer.querySelectorAll('label');
 
-  var elems = document.getElementsByClassName('hints');
-  for (var i=0;i<elems.length;i+=1){
-  console.log(elems[i]);
-  elems[i].style.display = 'block';
-}
   // keep track of user's answers
   let numCorrect = 0;
 
   // for each question...
-  myQuestions.forEach( (currentQuestion, questionNumber) => {
+  myQuestions.forEach((currentQuestion, questionNumber) => {
     // find selected answer
-    // hintContainers[questionNumber].style.display = 'block';
     const answerContainer = answerContainers[questionNumber];
     const selector = 'input[name=question'+questionNumber+']:checked';
     const userAnswer = (answerContainer.querySelector(selector) || {}).value;
+    //find the corresponding label
+    const labelSelector = 'label[class=question'+questionNumber+userAnswer+']';
+    const selectedLabel = quizContainer.querySelector(labelSelector);
     // if answer is correct
     if(userAnswer===currentQuestion.correctAnswer){
       // add to the number of correct answers
       numCorrect++;
-      // color the answers green
-      answerContainers[questionNumber].style.color = 'green';
+      selectedLabel.style.color = 'darkgreen';
+      selectedLabel.style.fontWeight = '500';
     }
-    // if answer is wrong or blank
     else{
-      // color the answers red
-      answerContainers[questionNumber].style.color = 'red';
+      selectedLabel.style.color = 'red';
+      selectedLabel.style.fontWeight = '500';
+      const correctAnsLabel = 'label[class=question'+questionNumber+currentQuestion.correctAnswer+']';
+      const correctAnsLabelHTML = quizContainer.querySelector(correctAnsLabel);
+      correctAnsLabelHTML.style.fontWeight = '500';
+      correctAnsLabelHTML.style.color = 'green';
     }
+    //Show all the correct answers to user
   });
 
   if((numCorrect/myQuestions.length)>=0.0 && (numCorrect/myQuestions.length)<=0.5)
@@ -134,7 +136,6 @@ function showResults(){
     resultsContainer.style.color='white';
     resultsContainer.innerHTML = `<span class="text">${numCorrect} out of ${myQuestions.length} are right!</span><br/>
         Whoo! Great! Go through few more sections in our portal and appear for other tests!`;
-
   }
   // show number of correct answers out of total
 }
